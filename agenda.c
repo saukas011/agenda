@@ -48,9 +48,10 @@ void incluir(struct contato contatos[], int *totalContatos){
 
     printf("codigo do contato> ");
     scanf("%d", &contatos[*totalContatos].codigo);
+    getchar();
 
     printf("nome do contato> ");
-    scanf("%s", &contatos[*totalContatos].nome);
+    scanf("%[^\n]", contatos[*totalContatos].nome);
 
     printf("telefone do contato> ");
     scanf("%11s", &contatos[*totalContatos].telefone);
@@ -64,7 +65,7 @@ void incluir(struct contato contatos[], int *totalContatos){
     contatos[*totalContatos].tipo = tipo;
     
 
-    printf("\ncontato adicionado!\n");
+    printf("\ncontato adicionado!\n\n");
     printf("           |%s|\n", &contatos[*totalContatos].nome);
     printf("código.........%d \n", contatos[*totalContatos].codigo);
     printf("numero:....(%c%c)", contatos[*totalContatos].telefone[0], contatos[*totalContatos].telefone[1]);
@@ -100,7 +101,7 @@ void excluir(struct contato contatos[], int *totalContatos){
         listar(contatos, *totalContatos);
     }
     printf("\ninsira o código do contato a ser excluído\n");
-    printf("> "); scanf("%d", codigo);
+    printf("> "); scanf("%d", &codigo);
 
     for(int i = 0; i<*totalContatos; i++){
         if(codigo==contatos[i].codigo){
@@ -113,20 +114,87 @@ void excluir(struct contato contatos[], int *totalContatos){
 }
 
 void alterar(struct contato contatos[], int totalContatos){
+    if(totalContatos==0){
+        printf("voce ainda não tem contatos\n\n");
+        return;
+    }
     int codigo, opcao;
-    printf("digite o código do contato que deseja alterar\n");
+    int sensor = 0;
+    char telefoneAntigo[11];
+    printf("\ndigite o código do contato que deseja alterar\n");
     printf("> ");
-    scanf("%d", codigo);
+    scanf("%d", &codigo);
 
-    printf("o que deseja alterar?\n");
-    printf("1 - telefone\n");
-    printf("2 - nome\n");
-    printf("3 - código\n");
-    printf("4 - tipo (trabalho/pessoal)");
-    printf("> ");
-    scanf("%d", opcao);
+    do{
+        if(sensor>0){
+            printf("opcao inválida!\n");
+        }
+        printf("o que deseja alterar?\n");
+        printf("1 - telefone\n");
+        printf("2 - nome\n");
+        printf("3 - código\n");
+        printf("4 - tipo (trabalho/pessoal)\n");
+        printf("> ");
+        scanf("%d", &opcao);
+        sensor++;
+    }while(opcao<=0 || opcao>4);
 
-    if(opcao)
+    for(int i = 0; i<totalContatos; i++){
+        if(codigo==contatos[i].codigo){
+            if(opcao==1){
+
+                //copiando telefone antigo para que seja imprimido mais tarde
+                for(int j = 0; j<=11; j++){
+                    telefoneAntigo[j] = contatos[i].telefone[j];
+                }
+
+                printf("\ndigite o novo numero de telefone\n");
+                printf("> ");
+                scanf("%s", contatos[i].telefone);
+
+                //imprimir contato alterado
+                printf("\ntelefone alterado!\n\n");
+                printf("           |%s|\n", &contatos[i].nome);
+                printf("código.........%d \n", contatos[i].codigo);
+
+                //imprimir numero antigo
+                printf("numero:...(%c%c)", telefoneAntigo[0], telefoneAntigo[1]);
+                for(int j = 2; j<11; j++){
+                    printf("%c", telefoneAntigo[j]);
+                    if(j==6){
+                        printf("-");
+                    }
+                }
+                printf(" -----> ");
+                //imprimir numero novo
+                printf("(%c%c)", contatos[i].telefone[0], contatos[i].telefone[1]);
+                for(int j = 2; j<=11; j++){
+                    printf("%c", contatos[i].telefone[j]);
+                    if(j==6){
+                        printf("-");
+                    }
+                }
+                if(contatos[i].tipo==1){
+                    printf("\n           |trabalho|\n\n");
+                }else{
+                    printf("\n           |pessoal|\n\n");
+                }
+
+            }else if(opcao==2){
+                printf("digite o novo nome\n");
+                printf("> ");
+                scanf("%s", contatos[i].nome);
+            }else if(opcao==3){
+                printf("digite o novo codigo\n");
+                printf("> ");
+                scanf("%s", contatos[i].codigo);
+            }else{
+                printf("tipo modificado!");
+            }
+        }else{
+            printf("contato não encontrado\n");
+        }
+    }
     }
 
 void listar(struct contato contatos[], int totalContatos){
@@ -154,6 +222,10 @@ void listar(struct contato contatos[], int totalContatos){
     }
 }
 void localizar(struct contato contatos[], int totalContatos){
+    if(totalContatos==0){
+        printf("voce ainda nao tem contatos\n\n");
+        return;
+    }
     int codigo;
     printf("1 - insira o código do contato\n");
     printf("> ");
@@ -170,7 +242,7 @@ void localizar(struct contato contatos[], int totalContatos){
                     printf("-");
                 }
             }
-        if(tipo==1){
+        if(contatos[i].tipo==1){
         printf("\n           |trabalho|\n\n");
         }else{
         printf("\n           |pessoal|\n\n");
