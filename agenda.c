@@ -138,7 +138,7 @@ void alterar(struct contato contatos[], int totalContatos){
     printf("\ndigite o código do contato que deseja alterar\n");
     printf("> ");
     scanf("%d", &codigo);
-
+    
     do{
         if(sensor>0){
             printf("opcao inválida!\n");
@@ -156,17 +156,17 @@ void alterar(struct contato contatos[], int totalContatos){
     int index = -1;
     int tipoAntigo, codigoAntigo;
     char nomeAntigo[50], telefoneAntigo[11];
-
+    
+    //localiza o contato
     for(int i=0; i<totalContatos; i++){
-
         if(codigo == contatos[i].codigo){
             index = i;
             break;
         }
     }    
-
+    //verifica se o contato existe
     if(index == -1){
-        printf("contato não encontrado\n");
+        printf("contato não encontrado!\n\n");
         return;
     }    
             
